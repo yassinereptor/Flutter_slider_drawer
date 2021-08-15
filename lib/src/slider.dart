@@ -134,7 +134,7 @@ class SliderMenuContainer extends StatefulWidget {
   /// By default it's [SlideDirection.LEFT_TO_RIGHT]
   ///
   final SlideDirection slideDirection;
-  AnimationController? animationDrawerController;
+  final AnimationController? animationDrawerController;
 
   const SliderMenuContainer({
     Key? key,

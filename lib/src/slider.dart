@@ -175,6 +175,7 @@ class SliderMenuContainerState extends State<SliderMenuContainer>
   double slideAmount = 0.0;
   double _percent = 0.0;
 
+  late AnimationController? animationDrawerController;
   late Animation animation;
 
   bool dragging = false;
@@ -182,29 +183,30 @@ class SliderMenuContainerState extends State<SliderMenuContainer>
   Widget? drawerIcon;
 
   /// check whether drawer is open
-  bool get isDrawerOpen => widget.animationDrawerController!.isCompleted;
+  bool get isDrawerOpen => animationDrawerController!.isCompleted;
 
   /// it's provide [animationController] for handle and lister drawer animation
-  AnimationController? get animationController => widget.animationDrawerController;
+  AnimationController? get animationController => animationDrawerController;
 
   /// Toggle drawer
-  void toggle() => widget.animationDrawerController!.isCompleted
-      ? widget.animationDrawerController!.reverse()
-      : widget.animationDrawerController!.forward();
+  void toggle() => animationDrawerController!.isCompleted
+      ? animationDrawerController!.reverse()
+      : animationDrawerController!.forward();
 
   /// Open drawer
-  void openDrawer() => widget.animationDrawerController!.forward();
+  void openDrawer() => animationDrawerController!.forward();
 
   /// Close drawer
-  void closeDrawer() => widget.animationDrawerController!.reverse();
+  void closeDrawer() => animationDrawerController!.reverse();
 
   @override
   void initState() {
     super.initState();
 
-    if (widget.animationDrawerController == null)
+    animationDrawerController = widget.animationDrawerController;
+    if (animationDrawerController == null)
     {
-      widget.animationDrawerController = AnimationController(
+      animationDrawerController = AnimationController(
         vsync: this,
         duration: Duration(milliseconds: widget.animationDuration));
     }
@@ -212,7 +214,7 @@ class SliderMenuContainerState extends State<SliderMenuContainer>
     animation = Tween<double>(
             begin: widget.sliderMenuCloseSize, end: widget.sliderMenuOpenSize)
         .animate(CurvedAnimation(
-            parent: widget.animationDrawerController!,
+            parent: animationDrawerController!,
             curve: Curves.easeIn,
             reverseCurve: Curves.easeOut));
   }
@@ -232,7 +234,7 @@ class SliderMenuContainerState extends State<SliderMenuContainer>
         /// Displaying the  shadow
         if (widget.isShadow) ...[
           AnimatedBuilder(
-            animation: widget.animationDrawerController!,
+            animation: animationDrawerController!,
             builder: (_, child) {
               return Transform.translate(
                 offset: Utils.getOffsetValueForShadow(widget.slideDirection,
@@ -262,7 +264,7 @@ class SliderMenuContainerState extends State<SliderMenuContainer>
 
         //Display Main Screen
         AnimatedBuilder(
-          animation: widget.animationDrawerController!,
+          animation: animationDrawerController!,
           builder: (_, child) {
             return Transform.translate(
               offset:
@@ -287,7 +289,7 @@ class SliderMenuContainerState extends State<SliderMenuContainer>
                       slideDirection: widget.slideDirection,
                       onTap: () => toggle(),
                       appBarHeight: widget.appBarHeight,
-                      animationController: widget.animationDrawerController!,
+                      animationController: animationDrawerController!,
                       appBarColor: widget.appBarColor,
                       appBarPadding: widget.appBarPadding!,
                       drawerIcon: widget.drawerIcon,
@@ -311,7 +313,7 @@ class SliderMenuContainerState extends State<SliderMenuContainer>
   @override
   void dispose() {
     super.dispose();
-    widget.animationDrawerController!.dispose();
+    animationDrawerController!.dispose();
   }
 
   void _onHorizontalDragStart(DragStartDetails detail) {
@@ -386,8 +388,8 @@ class SliderMenuContainerState extends State<SliderMenuContainer>
 
   move(double percent) {
     _percent = percent;
-    widget.animationDrawerController!.value = percent;
-    widget.animationDrawerController!.notifyListeners();
+    animationDrawerController!.value = percent;
+    animationDrawerController!.notifyListeners();
   }
 
   openOrClose() {

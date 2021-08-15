@@ -134,11 +134,11 @@ class SliderMenuContainer extends StatefulWidget {
   /// By default it's [SlideDirection.LEFT_TO_RIGHT]
   ///
   final SlideDirection slideDirection;
-  final AnimationController animationDrawerController;
+  AnimationController? animationDrawerController;
 
   const SliderMenuContainer({
     Key? key,
-    required this.animationDrawerController,
+    this.animationDrawerController = null,
     required this.sliderMenu,
     required this.sliderMain,
     this.isDraggable = true,
@@ -174,7 +174,7 @@ class SliderMenuContainerState extends State<SliderMenuContainer>
   static const double BLUR_SHADOW = 20.0;
   double slideAmount = 0.0;
   double _percent = 0.0;
-;
+
   late Animation animation;
 
   bool dragging = false;
@@ -202,9 +202,12 @@ class SliderMenuContainerState extends State<SliderMenuContainer>
   void initState() {
     super.initState();
 
-    // widget.animationDrawerController = AnimationController(
-    //     vsync: this,
-    //     duration: Duration(milliseconds: widget.animationDuration));
+    if (widget.animationDrawerController == null)
+    {
+      widget.animationDrawerController = AnimationController(
+        vsync: this,
+        duration: Duration(milliseconds: widget.animationDuration));
+    }
 
     animation = Tween<double>(
             begin: widget.sliderMenuCloseSize, end: widget.sliderMenuOpenSize)
